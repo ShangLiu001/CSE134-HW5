@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Method Test</title>
+    <style>
+      #response {
+        padding: 10px;
+        margin: 10px;
+        white-space: pre;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 16px;
+        font-weight: 100;
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        left: 20%;
+        line-height: 2ch;
+      }
+    </style>
+    <script>
+      function showFields() {
+        let method = document.getElementById("method").value;
+        if (method == "post") {
+          disableEverything();
+          document.getElementById("article_name").disabled = false;
+          document.getElementById("article_body").disabled = false;
+          document.getElementById("postBtn").disabled = false;
+        }
+        if (method == "get") {
+          disableEverything();
+          document.getElementById("id").disabled = false;
+          document.getElementById("getBtn").disabled = false;
+        }
+        if (method == "put") {
+          disableEverything();
+          document.getElementById("id").disabled = false;
+          document.getElementById("article_name").disabled = false;
+          document.getElementById("article_body").disabled = false;
+          document.getElementById("putBtn").disabled = false;
+        }
+        if (method == "delete") {
+          disableEverything();
+          document.getElementById("id").disabled = false;
+          document.getElementById("deleteBtn").disabled = false;
+        }
+      }
+
+      function disableEverything() {
+        document.getElementById("id").disabled = true;
+        document.getElementById("article_name").disabled = true;
+        document.getElementById("article_body").disabled = true;
+        document.getElementById("id").value = "";
+        document.getElementById("article_name").value = "";
+        document.getElementById("article_body").value = "";
+        document.getElementById("postBtn").disabled = true;
+        document.getElementById("getBtn").disabled = true;
+        document.getElementById("putBtn").disabled = true;
+        document.getElementById("deleteBtn").disabled = true;
+      }
+
+      function postMethod() {
+        let article_name = document.getElementById("article_name").value;
+        let article_body = document.getElementById("article_body").value;
+        let date = new Date();
+        let data = JSON.stringify({
+          article_name: article_name,
+          article_body: article_body,
+          date: date,
+        });
+
+        let implementation = document.getElementById("HTTP").value;
+        if (implementation == "XMLHttpRequest") {
+          let xmlreq = new XMLHttpRequest();
+          xmlreq.open("POST", "https://httpbin.org/post");
+          xmlreq.setRequestHeader("Content-Type", "application/json");
+          xmlreq.onreadystatechange = () => {
+            if (xmlreq.readyState === xmlreq.DONE && xmlreq.status === 200) {
+              let response = JSON.parse(xmlreq.responseText);
+              document.getElementById("response").innerHTML = JSON.stringify(
+                response,
+                undefined,
+                10
+              );
+            }
+          };
+          xmlreq.send(data);
+        } else {
+          fetch("https://httpbin.org/post", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: data,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("response").innerHTML = JSON.stringify(
+                data,
+                undefined,
+                10
+              );
+            });
+        }
+      }
+
+      function getMethod() {
+        let implementation = document.getElementById("HTTP").value;
+        if (implementation == "XMLHttpRequest") {
+          let xmlreq = new XMLHttpRequest();
+          xmlreq.open("GET", "https://httpbin.org/get");
+          xmlreq.setRequestHeader("Content-Type", "application/json");
+          xmlreq.onreadystatechange = () => {
+            if (xmlreq.readyState === xmlreq.DONE && xmlreq.status === 200) {
+              let response = JSON.parse(xmlreq.responseText);
+              document.getElementById("response").innerHTML = JSON.stringify(
+                response,
+                undefined,
+                10
+              );
+            }
+          };
+          xmlreq.send();
+        } else {
+          fetch("https://httpbin.org/get", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("response").innerHTML = JSON.stringify(
+                data,
+                undefined,
+                10
+              );
+            });
+        }
+      }
+
+      function putMethod() {
+        let id = document.getElementById("id").value;
+        let article_name = document.getElementById("article_name").value;
+        let article_body = document.getElementById("article_body").value;
+        let date = new Date();
+        let data = JSON.stringify({
+          id: id,
+          article_name: article_name,
+          article_body: article_body,
+          date: date,
+        });
+
+        let implementation = document.getElementById("HTTP").value;
+        if (implementation == "XMLHttpRequest") {
+          let xmlreq = new XMLHttpRequest();
+          xmlreq.open("PUT", "https://httpbin.org/put");
+          xmlreq.setRequestHeader("Content-Type", "application/json");
+          xmlreq.onreadystatechange = () => {
+            if (xmlreq.readyState === xmlreq.DONE && xmlreq.status === 200) {
+              let response = JSON.parse(xmlreq.responseText);
+              document.getElementById("response").innerHTML = JSON.stringify(
+                response,
+                undefined,
+                10
+              );
+            }
+          };
+          xmlreq.send(data);
+        } else {
+          fetch("https://httpbin.org/put", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: data,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("response").innerHTML = JSON.stringify(
+                data,
+                undefined,
+                10
+              );
+            });
+        }
+      }
+
+      function deleteMethod() {
+        let implementation = document.getElementById("HTTP").value;
+        if (implementation == "XMLHttpRequest") {
+          let xmlreq = new XMLHttpRequest();
+          xmlreq.open("DELETE", "https://httpbin.org/delete");
+          xmlreq.setRequestHeader("Content-Type", "application/json");
+          xmlreq.onreadystatechange = () => {
+            if (xmlreq.readyState === xmlreq.DONE && xmlreq.status === 200) {
+              let response = JSON.parse(xmlreq.responseText);
+              document.getElementById("response").innerHTML = JSON.stringify(
+                response,
+                undefined,
+                10
+              );
+            }
+          };
+          xmlreq.send();
+        } else {
+          fetch("https://httpbin.org/delete", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("response").innerHTML = JSON.stringify(
+                data,
+                undefined,
+                10
+              );
+            });
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1>Four Method Testing Ground</h1>
+
+    <select id="method" onchange="showFields()">
+      <option selected disabled>Choose HTTP method</option>
+      <option value="post" id="post">POST</option>
+      <option value="get" id="get">GET</option>
+      <option value="put" id="put">PUT</option>
+      <option value="delete" id="delete">DELETE</option>
+    </select>
+    <br />
+    <br />
+    <select id="HTTP">
+      <option selected disabled>Choose HTTP method's implementation</option>
+      <option value="XMLHttpRequest" id="XMLHttpRequest">XMLHttpRequest</option>
+      <option value="fetch" id="fetch">fetch</option>
+    </select>
+
+    <br />
+    <br />
+    <form onsubmit="return false">
+      <label for="id">ID:</label><br />
+      <input type="text" id="id" name="id" disabled required /><br />
+      <label for="article_name">ARTICLE NAME:</label><br />
+      <input
+        type="text"
+        id="article_name"
+        name="article_name"
+        disabled
+        required
+      /><br />
+      <label for="article_body">ARTICLE BODY:</label><br />
+      <textarea
+        id="article_body"
+        name="article_body"
+        disabled
+        required
+      ></textarea
+      ><br />
+      <button type="submit" id="postBtn" onclick="postMethod()" disabled>
+        Post
+      </button>
+      <button type="submit" id="getBtn" onclick="getMethod()" disabled>
+        Get
+      </button>
+      <button type="submit" id="putBtn" onclick="putMethod()" disabled>
+        Put
+      </button>
+      <button type="submit" id="deleteBtn" onclick="deleteMethod()" disabled>
+        Delete
+      </button>
+      <br /><br /><br />
+      <output id="response"> </output>
+    </form>
+  </body>
+</html>
